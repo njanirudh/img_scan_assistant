@@ -76,17 +76,20 @@ for i,path in enumerate(IMG_LIST):
             print(area)
             approx = cv2.approxPolyDP(cnt, 0.01 * cv2.arcLength(cnt, True), True)
             # cv2.drawContours(img, [approx], 0, (125,125,125), 5)
-            rect = cv2.minAreaRect(cnt)
-            print(rect)
-            photo = crop_minAreaRect(img, rect)
-            print(photo)
+
+            x,y,w,h = cv2.boundingRect(cnt)
+
+            # rect = cv2.minAreaRect(cnt)
+            # print(rect)
+            # photo = crop_minAreaRect(img, rect)
+            # print(photo)
             # cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            # photo = img[y:y + h, x:x + w]
+            photo = img[y:y + h, x:x + w]
 
-            # photo_list.append(photo)
+            photo_list.append(photo)
 
-    # for count, pic in enumerate(photo_list):
-    #     cv2.imwrite("/home/nj/NJ/GitHub/img_scan_assistant/data/" + str(count) + ".jpg", pic)
-    #
-    # cv2.imwrite("/home/nj/NJ/GitHub/img_scan_assistant/data/threshold.png",thresh)
+    for count, pic in enumerate(photo_list):
+        cv2.imwrite("/home/nj/NJ/GitHub/img_scan_assistant/data/" + str(count) + ".jpg", pic)
+
+    cv2.imwrite("/home/nj/NJ/GitHub/img_scan_assistant/data/threshold.png",thresh)
     break
