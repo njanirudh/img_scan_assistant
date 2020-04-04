@@ -1,7 +1,13 @@
 import cv2
 import numpy as np
+from os import path
+import uuid
 
-class image_cropper:
+class ImageCropper:
+    """
+    Class to pre-process the scanned image and crop
+    individual images found.
+    """
 
     def __init__(self):
         """
@@ -83,6 +89,15 @@ class image_cropper:
         :return: List of images
         """
         self.photo_list
+
+    def save_cropped_image(self,out_path:str):
+        """
+        Output path to save cropped images
+        :param out_path: Folder path to save images
+        :return: None
+        """
+        for img in self.photo_list:
+            cv2.imwrite(path.join(out_path,uuid.uuid4()+".jpg"),img)
 
     def reset(self):
         """
