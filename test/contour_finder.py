@@ -6,6 +6,7 @@ from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 from scipy import ndimage
 import imutils
+import uuid
 
 def crop_minAreaRect(img, rect):
 
@@ -30,12 +31,13 @@ def crop_minAreaRect(img, rect):
 IMG_PATH = "/home/nj/IMAGES/**/*.png"
 IMG_LIST = glob(IMG_PATH,recursive=True)
 
+
 for i,path in enumerate(IMG_LIST):
     print(path)
     img = cv2.imread(path)
     img = cv2.resize(img, (0, 0), fx=0.5, fy=0.5)
     img = img[5:img.shape[0] - 5, 5:img.shape[1] - 5]
-    # img = cv2.pyrMeanShiftFiltering(img, 21, 51)
+    img = cv2.pyrMeanShiftFiltering(img, 21, 51)
 
     img = cv2.copyMakeBorder(
         img,
@@ -54,8 +56,6 @@ for i,path in enumerate(IMG_LIST):
 
     contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    photo_list = []
-
     area_list = []
     total_contours = 0
     area_cumsum    = 0
@@ -69,10 +69,11 @@ for i,path in enumerate(IMG_LIST):
     area_cumsum = sum(area_list)
     max_area = np.max(area_list)
 
+    photo_list = []
     for cnt in contours:
         area = cv2.contourArea(cnt)
 
-        if area > (area_cumsum/total_contours):
+        if area > (area_cumsum/total_contours) and area != max_area:
             print(area)
             approx = cv2.approxPolyDP(cnt, 0.01 * cv2.arcLength(cnt, True), True)
             # cv2.drawContours(img, [approx], 0, (125,125,125), 5)
@@ -89,7 +90,9 @@ for i,path in enumerate(IMG_LIST):
             photo_list.append(photo)
 
     for count, pic in enumerate(photo_list):
-        cv2.imwrite("/home/nj/NJ/GitHub/img_scan_assistant/data/" + str(count) + ".jpg", pic)
+        cv2.imwrite("/home/nj/NJ/GitHub/img_scan_assistant/data/" + str(uuid.uuid4()) + ".jpg", pic)
 
-    cv2.imwrite("/home/nj/NJ/GitHub/img_scan_assistant/data/threshold.png",thresh)
-    break
+
+
+    # cv2.imwrite("/home/nj/NJ/GitHub/img_scan_assistant/data/threshold.png",thresh)
+    # break

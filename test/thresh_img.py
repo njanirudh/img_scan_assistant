@@ -5,7 +5,7 @@ IMG_PATH = "/home/nj/Documents/Family/Photos/1.png"
 font = cv2.FONT_HERSHEY_COMPLEX
 
 img = cv2.imread(IMG_PATH,0)
-img = cv2.resize(img,(0,0),fx=0.5,fy=0.5)
+img = cv2.resize(img,(0,0),fx=0.1,fy=0.1)
 img = img[5:img.shape[0]-5,5:img.shape[1]-5]
 
 img = cv2.copyMakeBorder(
@@ -38,8 +38,8 @@ for cnt in contours:
 
         photo_list.append(photo)
 
-for count,pic in enumerate(photo_list):
-    cv2.imwrite("/home/nj/NJ/GitHub/image_splitter/data/result_images"+str(count)+".jpg",pic)
+# for count,pic in enumerate(photo_list):
+#     cv2.imwrite("/home/nj/NJ/GitHub/image_splitter/data/result_images"+str(count)+".jpg",pic)
 
 # cv2.imshow("1", photo_list.pop(2))
 cv2.imshow("2", thresh)
