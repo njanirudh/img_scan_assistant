@@ -18,7 +18,7 @@ class CropperPipeline:
             img = cv2.imread(single_file)
 
             img_cropper.set_input_image(img)
-            img_cropper.preprocess_image()
+            img_cropper.preprocess_input_image()
             img_cropper.crop_image()
             img_cropper.save_cropped_image(output_path_folder)
             img_cropper.reset()
@@ -27,5 +27,7 @@ class CropperPipeline:
         pass
 
 if __name__ == "__main__":
+    pass
+
 
 
