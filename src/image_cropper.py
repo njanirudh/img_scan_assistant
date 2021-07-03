@@ -1,34 +1,66 @@
+from typing import List
+
 import cv2
-import uuid
+import yaml
 import numpy as np
-from os import path
+
 
 class ImageCropper:
 
-    def __init__(self, config_path:str):
-        self.scale_factor = 0.1
-        self.edge_crop = 5
-        self.border = 20
-        self.photo_list = []
+    def __init__(self, config_path: str = "../config/config.yaml"):
+        """
+        Creates a cropper from configuration values given
+        in the config.yaml file.
+        """
 
-    def process_image(self, image:np.array) -> list[np.array]:
+        # Open config file from path
+        with open(config_path) as stream:
+            try:
+                yaml_data = yaml.safe_load(stream)
+                print(yaml_data)
+                self.scale_factor = yaml_data["preprocessing"]["scale_factor"]
+                self.edge_crop = yaml_data["preprocessing"]["edge_crop"]
+                self.border = yaml_data["preprocessing"]["border"]
+
+            except yaml.YAMLError as exc:
+                print(exc)
+
+            finally:
+                # Setting preprocessing parameters
+                self.scale_factor = 0.1
+                self.edge_crop = 5
+                self.border = 15
+
+        self.minimum_area = 1000
+
+    def process_image(self, image: np.array) -> (List[np.array], np.array):
+        """
+        Main function called to find the photographs in the scanned output image.
+        """
+
         resized_img = self.__preprocess_rs_image(image)
         image_list = self.__crop_rs_image(image, resized_img)
 
-        return image_list
+        return image_list, resized_img
 
-    def __preprocess_rs_image(self, image:np.array) -> np.array:
+    def __preprocess_rs_image(self, image: np.array) -> np.array:
+        """
+        Perform preprocess steps on the image to find the photographs
+        and create a binary image for further contour detection.
+        """
+
         rs_image = cv2.resize(image, (0, 0), fx=self.scale_factor, fy=self.scale_factor)
         width,height,channels = rs_image.shape
 
+        # Remove a thin border from the image that
+        # usually causes leads to bad image cropping
         rs_image = rs_image[self.edge_crop:width - self.edge_crop,
                             self.edge_crop:height - self.edge_crop]
-        rs_image = image[int((1 / self.scale_factor) * self.edge_crop): image[0] - int((1 / self.scale_factor) * self.edge_crop),
-                   int((1 / self.scale_factor) * self.edge_crop):image[1] - int((1 / self.scale_factor) * self.edge_crop)]
 
         rs_image = cv2.pyrMeanShiftFiltering(rs_image, 21, 51)
         rs_image = cv2.cvtColor(rs_image, cv2.COLOR_BGR2GRAY)
 
+        # Add a white background around the processed image
         rs_image = cv2.copyMakeBorder(
             rs_image,
             top=self.border,
@@ -45,32 +77,46 @@ class ImageCropper:
 
         return rs_image
 
-    def __crop_rs_image(self, image:np.array, rs_image:np.array) -> list[np.array]:
-        _,contours,_ = cv2.findContours(rs_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    def __crop_rs_image(self, image: np.array, rs_image: np.array) -> List[np.array]:
+        """
+        Finds the largest contours in the binary image and returns
+        a list of photographs found in the scanned image.
+        """
+        contours, hierarchy = cv2.findContours(rs_image, cv2.RETR_TREE,
+                                               cv2.CHAIN_APPROX_SIMPLE)
 
+        # Use contour area as a metric for
+        # removing unwanted contours
         area_list = []
         for cnt in contours:
             area = cv2.contourArea(cnt)
             area_list.append(area)
+            # print(area)
 
-        total_contours = len(contours)
-        area_cumsum = sum(area_list)
         max_area = np.max(area_list)
 
-        photo_list:list = []
+        photo_list = []
 
         for cnt in contours:
             area = cv2.contourArea(cnt)
+            if area > self.minimum_area and area != max_area:
 
-            if area > (area_cumsum / total_contours) and area != max_area:
+                # Resize contour rectangles to full size
                 x, y, w, h = cv2.boundingRect(cnt)
                 x, y, w, h = int((1 / self.scale_factor) * (x - self.border)), int((1 / self.scale_factor) * (y - self.border)), \
-                             int((1 / self.scale_factor) * (w)), int((1 / self.scale_factor) * (h))
+                             int((1 / self.scale_factor) * w), int((1 / self.scale_factor) * h)
 
-                # cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 photo = image[y:y + h, x:x + w]
-
                 photo_list.append(photo)
         
         return photo_list
 
+
+if __name__ == "__main__":
+
+    img = cv2.imread("/home/anirudh/NJ/Github/img_scan_assistant/dataset/imagespng-02.png")
+
+    img_cropper = ImageCropper()
+    print(img_cropper)
+    out_list = img_cropper.process_image(img)
+    print((out_list))

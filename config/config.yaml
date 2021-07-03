@@ -1,2 +1,5 @@
 preprocessing:
-  
+    scale_factor: 0.1
+    edge_crop: 5
+    border: 20
+
