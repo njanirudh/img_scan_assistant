@@ -1,5 +1,5 @@
 preprocessing:
     scale_factor: 0.1
-    edge_crop: 5
-    border: 20
+    edge_crop: 5  # Number of px in edge to crop
+    border: 20    # Number of px of white borders to add
 
