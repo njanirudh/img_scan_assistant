@@ -51,7 +51,7 @@ class ImageCropper:
         width, height, channels = rs_image.shape
 
         # Remove a thin border from the image that
-        # usually causes leads to bad image cropping
+        # usually causes bad image thresholding and cropping
         rs_image = rs_image[self.edge_crop:width - self.edge_crop,
                    self.edge_crop:height - self.edge_crop]
 
@@ -107,11 +107,3 @@ class ImageCropper:
 
         return photo_list
 
-
-if __name__ == "__main__":
-    img = cv2.imread("/home/anirudh/NJ/Github/img_scan_assistant/dataset/imagespng-02.png")
-
-    img_cropper = ImageCropper()
-    print(img_cropper)
-    out_list = img_cropper.process_image(img)
-    print((out_list))
