@@ -1,13 +1,13 @@
-import os
-import cv2
+import concurrent.futures
 import glob
-import uuid
 import itertools
-import numpy as np
+import os
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 from os import path
 
-import concurrent.futures
-from concurrent.futures import ThreadPoolExecutor
+import cv2
+import numpy as np
 
 from image_cropper import ImageCropper
 
@@ -29,7 +29,7 @@ class MultiCropper:
 
         file_list = list(itertools.chain.from_iterable([glob.glob(pth, recursive=True) for pth in
                                                         [os.path.join(in_path, '*.jpg'),
-                                                        os.path.join(in_path, '*.png')]]))
+                                                         os.path.join(in_path, '*.png')]]))
         image_cropper = ImageCropper(config=self.config)
 
         # Multi-threaded cropper
@@ -71,4 +71,3 @@ class MultiCropper:
         out_img_path = path.join(out_path, str(uuid.uuid4()) + ".jpg")
         print(out_img_path)
         cv2.imwrite(out_img_path, image)
-

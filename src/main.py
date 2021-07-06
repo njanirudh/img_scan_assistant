@@ -1,11 +1,10 @@
-import os
 import argparse
 
 from multi_cropper import MultiCropper
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="")
+    parser = argparse.ArgumentParser(description="Image Scan Assistant v1.0")
     group = parser.add_mutually_exclusive_group(required=True)
 
     group.add_argument('-i', '--image', help='Input image path')

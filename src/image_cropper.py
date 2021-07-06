@@ -1,7 +1,8 @@
+from typing import List
+
 import cv2
 import numpy as np
 import yaml
-from typing import List
 
 
 class ImageCropper:
@@ -106,4 +107,3 @@ class ImageCropper:
                 photo_list.append(photo)
 
         return photo_list
-
