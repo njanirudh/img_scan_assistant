@@ -2,7 +2,7 @@
 
 # img_scan_assistant/src/image_cropper.py: 4
 # img_scan_assistant/src/multi_cropper.py: 10
-numpy == 1.17.4
+numpy == 1.22.0
 
 # img_scan_assistant/src/image_cropper.py: 3
 # img_scan_assistant/src/multi_cropper.py: 9
