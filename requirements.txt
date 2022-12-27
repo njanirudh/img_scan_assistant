@@ -9,4 +9,4 @@ numpy == 1.17.4
 opencv_contrib_python == 4.2.0.34
 
 # img_scan_assistant/setup.py: 1
-setuptools == 45.2.0
+setuptools == 65.5.1
