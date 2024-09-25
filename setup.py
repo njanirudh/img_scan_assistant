@@ -1,11 +1,21 @@
 from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
-    name='ImageScanAssistant ',
+    name='ImageScanAssistant',
     version='1.0',
     url='https://github.com/njanirudh/img_scan_assistant',
-    license='MIT',
+    description='Commandline application for cropping individual images from a large scanned image.',
     author='njanirudh',
     author_email='anijaya9@gmail.com',
-    description='Commandline application for cropping individual images from a large scanned image.'
+    packages=find_packages(),
+    install_requires=[
+        'numpy',      # Example dependency
+        'opencv-python'
+    ],
+    entry_points={
+        'console_scripts': [
+            'image_scan_cropper=main:main',  # Command-line interface if applicable
+        ],
+    },
 )
