@@ -1,4 +1,4 @@
-threads: 4
+processes: 4
 preprocessing:
     scale_factor: 0.1
     edge_crop: 5  # Number of px in edge to crop

@@ -10,3 +10,5 @@ opencv_contrib_python~=4.2.0.34
 
 # img_scan_assistant/setup.py: 1
 setuptools~=75.1.0
+
+PyYAML~=6.0.2
