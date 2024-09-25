@@ -1,10 +1,10 @@
-import concurrent.futures
-import glob
-import itertools
 import os
+import glob
 import uuid
-from concurrent.futures import ThreadPoolExecutor
+import itertools
 from os import path
+import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 
 import cv2
 import numpy as np
@@ -32,7 +32,7 @@ class MultiCropper:
                                                          os.path.join(in_path, '*.png')]]))
         image_cropper = ImageCropper(config=self.config)
 
-        # Multi-threaded cropper
+        # Multithreaded cropper
         with ThreadPoolExecutor(max_workers=self.threads) as executor:
             futures = []
             for li in file_list:
@@ -41,8 +41,8 @@ class MultiCropper:
 
             for future in concurrent.futures.as_completed(futures):
                 result_list, result_debug = future.result()[0], future.result()[1]
-                self.__save_image(result_debug, out_path)
-                self.__save_image_list(result_list, out_path)
+                self._save_image(result_debug, out_path)
+                self._save_image_list(result_list, out_path)
 
     def crop_single_image(self, in_path: str, out_path: str) -> None:
         """
@@ -52,9 +52,9 @@ class MultiCropper:
         image_cropper = ImageCropper(config=self.config)
         result_list, _ = image_cropper.process_image(image)
 
-        self.__save_image_list(result_list, out_path)
+        self._save_image_list(result_list, out_path)
 
-    def __save_image_list(self, image_list: list, out_path: str) -> None:
+    def _save_image_list(self, image_list: list, out_path: str) -> None:
         """
         Saves all cropped photographs into the given folder path with a random file name.
         """
@@ -64,7 +64,7 @@ class MultiCropper:
             out_path_list.append(out_img_path)
             cv2.imwrite(out_img_path, img)
 
-    def __save_image(self, image: np.array, out_path: str) -> None:
+    def _save_image(self, image: np.array, out_path: str) -> None:
         """
         Saves a single image to a folder with a random file name.
         """

@@ -1,8 +1,8 @@
+import yaml
 from typing import List
 
 import cv2
 import numpy as np
-import yaml
 
 
 class ImageCropper:
@@ -37,12 +37,12 @@ class ImageCropper:
         Main function called to find the photographs in the scanned output image.
         """
 
-        resized_img = self.__preprocess_rs_image(image)
-        image_list = self.__crop_rs_image(image, resized_img)
+        resized_img = self._preprocess_rs_image(image)
+        image_list = self._crop_rs_image(image, resized_img)
 
         return image_list, resized_img
 
-    def __preprocess_rs_image(self, image: np.array) -> np.array:
+    def _preprocess_rs_image(self, image: np.array) -> np.array:
         """
         Perform preprocess steps on the image to find the photographs
         and create a binary image for further contour detection.
@@ -76,7 +76,7 @@ class ImageCropper:
 
         return rs_image
 
-    def __crop_rs_image(self, image: np.array, rs_image: np.array) -> List[np.array]:
+    def _crop_rs_image(self, image: np.array, rs_image: np.array) -> List[np.array]:
         """
         Finds the largest contours in the binary image and returns
         a list of photographs found in the scanned image.

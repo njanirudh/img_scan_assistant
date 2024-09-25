@@ -8,10 +8,9 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group(required=True)
 
     group.add_argument('-i', '--image', help='Input image path')
-    group.add_argument('-f', '--folder', help='Input folder path')
+    group.add_argument('-f', '--folder', help='Input folder path with images {*.jpg, *.png}')
     parser.add_argument('-o', '--output', help='Set output folder path', default='./')
     parser.add_argument('-c', '--config', help='Config file path', default="./config/config.yaml")
-    parser.add_argument('--threads', help='Total threads', default=4, type=int)
 
     args = parser.parse_args()
 
