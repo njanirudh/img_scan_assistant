@@ -2,7 +2,7 @@ import cv2
 import unittest
 import numpy as np
 from unittest.mock import patch, mock_open
-from image_cropper import ImageCropper
+from image_scan_assistant import ImageCropper
 
 
 class TestImageCropper(unittest.TestCase):
