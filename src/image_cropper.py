@@ -6,7 +6,10 @@ import numpy as np
 
 
 class ImageCropper:
-
+    """
+    Base Class that is initialized with the input config file and
+    crops the multiple images from the
+    """
     def __init__(self, config: str = "../config/config.yaml"):
         """
         Creates a cropper from configuration values given
@@ -24,13 +27,11 @@ class ImageCropper:
             except yaml.YAMLError as exc:
                 print(exc)
 
-            finally:
-                # Setting preprocessing parameters
-                self.scale_factor = 0.1
-                self.edge_crop = 5
-                self.border = 15
+            # Use default settings if YAML fails to load
+            self.scale_factor = yaml_data.get("preprocessing", {}).get("scale_factor", 0.1)
+            self.edge_crop = yaml_data.get("preprocessing", {}).get("edge_crop", 5)
+            self.border = yaml_data.get("preprocessing", {}).get("border", 15)
 
-        self.minimum_area = 1000
 
     def process_image(self, image: np.array) -> (List[np.array], np.array):
         """
@@ -91,12 +92,13 @@ class ImageCropper:
             area = cv2.contourArea(cnt)
             area_list.append(area)
 
-        max_area = np.max(area_list)
         photo_list = []
+        max_area = np.max(area_list)
+        minimum_area = max_area/8
 
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area > self.minimum_area and area != max_area:
+            if area > minimum_area and area != max_area:
                 # Resize contour rectangles to full size
                 x, y, w, h = cv2.boundingRect(cnt)
                 x, y, w, h = int((1 / self.scale_factor) * (x - self.border)), \
