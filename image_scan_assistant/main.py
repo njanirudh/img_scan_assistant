@@ -1,6 +1,6 @@
 import argparse
 
-from multi_cropper import MultiCropper
+from _multi_cropper import MultiCropper
 
 if __name__ == "__main__":
 

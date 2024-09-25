@@ -1,4 +1,4 @@
-from .image_cropper import *
-from .multi_cropper import *
+from ._image_cropper import *
+from ._multi_cropper import *
 
 
