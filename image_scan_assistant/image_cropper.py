@@ -94,7 +94,7 @@ class ImageCropper:
 
         photo_list = []
         max_area = np.max(area_list)
-        minimum_area = max_area/8
+        minimum_area = max_area/4
 
         for cnt in contours:
             area = cv2.contourArea(cnt)

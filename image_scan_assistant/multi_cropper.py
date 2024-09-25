@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import cv2
 import numpy as np
 
-from image_cropper import ImageCropper
+from image_scan_assistant.image_cropper import ImageCropper
 
 
 class MultiCropper:
